@@ -78,13 +78,15 @@ function getAes(op) {
       } else {
         if (op === 'encrypt') {
           var cipher = nodeCrypto.createCipheriv('aes-256-cbc', key, iv);
-          cipher.update(data);
-          resolve(cipher.final());
+          let firstChunk = cipher.update(data);
+          let secondChunk = cipher.final();
+          resolve(Buffer.concat([firstChunk, secondChunk]));
         }
         else if (op === 'decrypt') {
           var decipher = nodeCrypto.createDecipheriv('aes-256-cbc', key, iv);
-          decipher.update(data);
-          resolve(decipher.final());
+          let firstChunk = decipher.update(data);
+          let secondChunk = decipher.final();
+          resolve(Buffer.concat([firstChunk, secondChunk]));
         }
       }
     });
